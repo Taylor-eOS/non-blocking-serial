@@ -29,11 +29,8 @@ bool NonBlockingSerial::sendMessage(const uint8_t* payload, size_t payload_len) 
     for (size_t i = 0; i < payload_len; ++i) checksum += payload[i];
     checksum &= 0xFF;
     size_t total = 4 + payload_len;
-    unsigned long start = millis();
-    while (_serial.availableForWrite() < (int)total) {
-        if (millis() - start > _timeout_ms) return false;
-        yield();
-    }
+    int avail = _serial.availableForWrite();
+    if (avail < (int)total) return false;
     _serial.write(header0);
     _serial.write(header1);
     _serial.write(lenb);
