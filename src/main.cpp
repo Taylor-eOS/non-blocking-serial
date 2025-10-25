@@ -1,15 +1,15 @@
 #include <Arduino.h>
 #include "NonBlockingSerial.h"
 
-NonBlockingSerial debugStream(Serial);
+NonBlockingSerial debugStream(Serial, 50);
 
 void setup() {
     Serial.begin(115200);
+    while(!Serial);
 }
 
 void loop() {
-    uint8_t status[] = "System OK";
-    debugStream.sendBytes(status, 9);
+    debugStream.send("System OK");
     delay(1000);
 }
 
